@@ -13,7 +13,6 @@ interface WedgeProps {
 // Wedge component that fits into Pac-Man's mouth
 const Wedge: React.FC<WedgeProps> = ({
   angle,
-  containerWidth,
   containerHeight,
   pacmanAngle,
   onReachedTarget,
@@ -265,7 +264,7 @@ const PacMan = () => {
   const previousAngleRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const pacmanPositionRef = useRef({ x: 0, y: 0 });
-  const [pacmanSize, setPacmanSize] = useState(100);
+  const [pacmanSize] = useState(100);
   const [containerTopDistance, setContainerTopDistance] = useState(0);
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
