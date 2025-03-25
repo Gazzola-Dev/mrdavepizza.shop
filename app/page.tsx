@@ -86,15 +86,15 @@ const Wedge: React.FC<WedgeProps> = ({
           d="M50 50 L 90 50 A 40 40 0 0 0 61.7 10.3 L 50 50 Z"
           fill="#EDCA98"
           stroke="#863A18"
-          stroke-width="2"
+          strokeWidth="2"
         />
         <path
           d="M50 50 L 90 50 A 40 40 0 0 0 61.7 10.3 L 50 50 Z"
           fill="none"
           stroke="#C88A3B"
-          stroke-width="5"
-          stroke-dasharray="5,3"
-          stroke-dashoffset="10"
+          strokeWidth="5"
+          strokeDasharray="5,3"
+          strokeDashoffset="10"
         />
         <ellipse
           cx="65"
@@ -120,25 +120,25 @@ const Wedge: React.FC<WedgeProps> = ({
         <path
           d="M65 30 Q 68 28, 70 25"
           stroke="#5F8D4E"
-          stroke-width="2"
+          strokeWidth="2"
           fill="none"
         />
         <path
           d="M75 40 Q 78 38, 80 35"
           stroke="#5F8D4E"
-          stroke-width="2"
+          strokeWidth="2"
           fill="none"
         />
         <path
           d="M65 20 Q 68 18, 70 15"
           stroke="#F8E8B0"
-          stroke-width="1.5"
+          strokeWidth="1.5"
           fill="none"
         />
         <path
           d="M80 30 Q 83 28, 85 25"
           stroke="#F8E8B0"
-          stroke-width="1.5"
+          strokeWidth="1.5"
           fill="none"
         />
         <circle
@@ -376,7 +376,21 @@ const PacMan = () => {
     setAngle(newAngle < 0 ? newAngle + 360 : newAngle); // Normalize to 0-359
   };
 
+  // Add this in the PacMan component, near your other useCallback hooks
+  const preventDefaultTouchBehavior = useCallback((e: TouchEvent) => {
+    e.preventDefault();
+  }, []);
+
+  // Add this handler
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      e.preventDefault();
+    },
+    []
+  );
+
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.preventDefault(); // Add this line
     if (!containerRef.current) return;
 
     if (e.touches && e.touches[0]) {
@@ -420,6 +434,30 @@ const PacMan = () => {
     }
   }, [wedgesContainerRef]);
 
+  useEffect(() => {
+    // Disable touchmove on the document to prevent scrolling
+    document.addEventListener("touchmove", preventDefaultTouchBehavior, {
+      passive: false,
+    });
+
+    // Prevent pull-to-refresh on mobile browsers
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.height = "100%";
+
+    return () => {
+      // Clean up event listeners
+      document.removeEventListener("touchmove", preventDefaultTouchBehavior);
+
+      // Reset body styles
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
+    };
+  }, [preventDefaultTouchBehavior]);
+
   return (
     <div
       ref={containerRef}
@@ -427,6 +465,7 @@ const PacMan = () => {
       style={{ position: "relative", overflow: "hidden" }}
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
+      onTouchStart={handleTouchStart}
     >
       {/* Score UI */}
       <div className="absolute top-4 left-0 right-0 flex justify-center items-center gap-8">
@@ -492,15 +531,15 @@ const PacMan = () => {
             d="M50 50 L 90 50 A 40 40 0 1 1 61.7 10.3 L 50 50 Z"
             fill="#EDCA98"
             stroke="#863A18"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             d="M50 50 L 90 50 A 40 40 0 1 1 61.7 10.3 L 50 50 Z"
             fill="none"
             stroke="#C88A3B"
-            stroke-width="5"
-            stroke-dasharray="5,3"
-            stroke-dashoffset="10"
+            strokeWidth="5"
+            strokeDasharray="5,3"
+            strokeDashoffset="10"
           />
           <ellipse
             cx="30"
@@ -540,61 +579,61 @@ const PacMan = () => {
           <path
             d="M35 45 Q 38 42, 40 40"
             stroke="#5F8D4E"
-            stroke-width="2"
+            strokeWidth="2"
             fill="none"
           />
           <path
             d="M20 30 Q 23 28, 25 25"
             stroke="#5F8D4E"
-            stroke-width="2"
+            strokeWidth="2"
             fill="none"
           />
           <path
             d="M85 55 Q 88 52, 90 50"
             stroke="#5F8D4E"
-            stroke-width="2"
+            strokeWidth="2"
             fill="none"
           />
           <path
             d="M35 80 Q 38 78, 40 75"
             stroke="#5F8D4E"
-            stroke-width="2"
+            strokeWidth="2"
             fill="none"
           />
           <path
             d="M65 80 Q 68 78, 70 75"
             stroke="#5F8D4E"
-            stroke-width="2"
+            strokeWidth="2"
             fill="none"
           />
           <path
             d="M15 40 Q 20 35, 25 30"
             stroke="#F8E8B0"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             fill="none"
           />
           <path
             d="M30 45 Q 35 40, 40 35"
             stroke="#F8E8B0"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             fill="none"
           />
           <path
             d="M75 60 Q 80 65, 85 68"
             stroke="#F8E8B0"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             fill="none"
           />
           <path
             d="M20 70 Q 25 75, 30 80"
             stroke="#F8E8B0"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             fill="none"
           />
           <path
             d="M60 65 Q 65 70, 70 75"
             stroke="#F8E8B0"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             fill="none"
           />
           <circle
