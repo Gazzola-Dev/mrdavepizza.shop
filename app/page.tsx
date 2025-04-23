@@ -1,4 +1,5 @@
 "use client";
+import RedirectDialog from "@/components/RedirectDialog";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 // Wedge props interface
@@ -467,6 +468,7 @@ const PacMan = () => {
       onTouchMove={handleTouchMove}
       onTouchStart={handleTouchStart}
     >
+      <RedirectDialog />
       {/* Score UI */}
       <div className="absolute top-4 left-0 right-0 flex justify-center items-center gap-8">
         <div className="bg-yellow-400 rounded-lg p-4 shadow-lg">
